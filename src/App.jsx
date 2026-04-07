@@ -6,14 +6,18 @@ import TestStringInput from "./components/Editor/TestStringInput";
 import MatchPanel from "./components/MatchInfo/MatchPanel";
 import DiagramPanel from "./components/Visualizer/DiagramPanel";
 import CheatSheetPanel from "./components/CheatSheet/CheatSheetPanel";
+import HistoryPanel from "./components/History/HistoryPanel";
 import { useRegex } from "./hooks/useRegex";
+import { useHistory } from "./hooks/useHistory";
 
 function App() {
   const {
     pattern,
     setPattern,
     flags,
+    flagString,
     toggleFlag,
+    setFlagsFromString,
     testString,
     setTestString,
     regex,
@@ -22,11 +26,29 @@ function App() {
     parseError,
   } = useRegex();
 
+  const { history, addToHistory, removeFromHistory, clearHistory } =
+    useHistory();
+
   const handleInsertPattern = useCallback(
     (syntax) => {
       setPattern((prev) => prev + syntax);
     },
     [setPattern],
+  );
+
+  const handleSave = useCallback(() => {
+    addToHistory(pattern, flagString, testString);
+  }, [addToHistory, pattern, flagString, testString]);
+
+  const handleSelectHistory = useCallback(
+    (item) => {
+      setPattern(item.pattern);
+      setFlagsFromString(item.flags);
+      if (item.testString) {
+        setTestString(item.testString);
+      }
+    },
+    [setPattern, setFlagsFromString, setTestString],
   );
 
   return (
@@ -41,6 +63,7 @@ function App() {
               flags={flags}
               onToggleFlag={toggleFlag}
               error={error}
+              onSave={handleSave}
             />
             <TestStringInput
               testString={testString}
@@ -55,6 +78,14 @@ function App() {
             <DiagramPanel ast={ast} parseError={parseError} />
             <CheatSheetPanel onInsertPattern={handleInsertPattern} />
           </>
+        }
+        bottom={
+          <HistoryPanel
+            history={history}
+            onSelect={handleSelectHistory}
+            onRemove={removeFromHistory}
+            onClear={clearHistory}
+          />
         }
       />
     </div>

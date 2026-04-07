@@ -1,13 +1,31 @@
 import FlagToggle from "./FlagToggle";
 
-function RegexInput({ pattern, onPatternChange, flags = {}, onToggleFlag, error }) {
+function RegexInput({
+  pattern,
+  onPatternChange,
+  flags = {},
+  onToggleFlag,
+  error,
+  onSave,
+}) {
   return (
     <div className="p-4 border-b border-gray-800">
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs text-gray-500 uppercase tracking-wider">
           Regular Expression
         </p>
-        <FlagToggle flags={flags} onToggle={onToggleFlag} />
+        <div className="flex items-center gap-2">
+          {pattern && (
+            <button
+              onClick={onSave}
+              className="px-2 py-1 rounded text-xs text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
+              title="히스토리에 저장"
+            >
+              💾 저장
+            </button>
+          )}
+          <FlagToggle flags={flags} onToggle={onToggleFlag} />
+        </div>
       </div>
 
       <div
@@ -23,7 +41,7 @@ function RegexInput({ pattern, onPatternChange, flags = {}, onToggleFlag, error 
           type="text"
           value={pattern}
           onChange={(e) => onPatternChange(e.target.value)}
-          placeholder="정규식을 입력하세요... (예: \\d{3}-\\d{4})"
+          placeholder="정규식을 입력하세요... (예: \d{3}-\d{4})"
           spellCheck={false}
           className="flex-1 bg-transparent px-2 py-3 font-mono text-sm text-gray-100 outline-none placeholder:text-gray-600"
         />

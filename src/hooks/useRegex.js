@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { parseRegex } from "../utils/regexParser";
 
 const DEFAULT_FLAGS = {
@@ -23,6 +23,15 @@ export function useRegex() {
   const toggleFlag = (flag) => {
     setFlags((prev) => ({ ...prev, [flag]: !prev[flag] }));
   };
+
+  const setFlagsFromString = useCallback((str) => {
+    setFlags({
+      g: str.includes("g"),
+      i: str.includes("i"),
+      m: str.includes("m"),
+      s: str.includes("s"),
+    });
+  }, []);
 
   const regex = useMemo(() => {
     if (!pattern) return null;
@@ -54,6 +63,7 @@ export function useRegex() {
     flags,
     flagString,
     toggleFlag,
+    setFlagsFromString,
     testString,
     setTestString,
     regex,
