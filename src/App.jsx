@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Header from "./components/Layout/Header";
 import PanelLayout from "./components/Layout/PanelLayout";
 import RegexInput from "./components/Editor/RegexInput";
@@ -10,6 +10,7 @@ import CheatSheetPanel from "./components/CheatSheet/CheatSheetPanel";
 import HistoryPanel from "./components/History/HistoryPanel";
 import { useRegex } from "./hooks/useRegex";
 import { useHistory } from "./hooks/useHistory";
+import { decodeFromUrl } from "./utils/shareUrl";
 
 function App() {
   const {
@@ -33,6 +34,20 @@ function App() {
   const [replaceValue, setReplaceValue] = useState("");
   const [replaceVisible, setReplaceVisible] = useState(false);
 
+  // URL에서 상태 복원 (최초 1회)
+  useEffect(() => {
+    const fromUrl = decodeFromUrl();
+    if (fromUrl) {
+      setPattern(fromUrl.pattern);
+      if (fromUrl.flags) setFlagsFromString(fromUrl.flags);
+      if (fromUrl.testString) setTestString(fromUrl.testString);
+      if (fromUrl.replaceValue) {
+        setReplaceValue(fromUrl.replaceValue);
+        setReplaceVisible(true);
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleInsertPattern = useCallback(
     (syntax) => {
       setPattern((prev) => prev + syntax);
@@ -55,9 +70,25 @@ function App() {
     [setPattern, setFlagsFromString, setTestString],
   );
 
+  const handleSelectPreset = useCallback(
+    (preset) => {
+      setPattern(preset.pattern);
+      setFlagsFromString(preset.flags);
+      setTestString(preset.testString);
+      setReplaceValue("");
+    },
+    [setPattern, setFlagsFromString, setTestString],
+  );
+
   return (
     <div className="h-screen flex flex-col bg-gray-950 text-gray-100">
-      <Header />
+      <Header
+        onSelectPreset={handleSelectPreset}
+        pattern={pattern}
+        flagString={flagString}
+        testString={testString}
+        replaceValue={replaceValue}
+      />
       <PanelLayout
         left={
           <>
