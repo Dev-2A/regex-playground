@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import Header from "./components/Layout/Header";
 import PanelLayout from "./components/Layout/PanelLayout";
 import RegexInput from "./components/Editor/RegexInput";
@@ -20,6 +21,13 @@ function App() {
     ast,
     parseError,
   } = useRegex();
+
+  const handleInsertPattern = useCallback(
+    (syntax) => {
+      setPattern((prev) => prev + syntax);
+    },
+    [setPattern],
+  );
 
   return (
     <div className="h-screen flex flex-col bg-gray-950 text-gray-100">
@@ -45,7 +53,7 @@ function App() {
         right={
           <>
             <DiagramPanel ast={ast} parseError={parseError} />
-            <CheatSheetPanel />
+            <CheatSheetPanel onInsertPattern={handleInsertPattern} />
           </>
         }
       />
