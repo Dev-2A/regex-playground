@@ -13,7 +13,6 @@ function DiagramPanel({ ast, parseError }) {
   const { containerRef, transform, resetTransform, handlers } = usePanZoom();
 
   const handleZoomIn = useCallback(() => {
-    // ZoomControls에서 직접 transform 변경은 안 되므로 간단한 방식 사용
     const event = new WheelEvent("wheel", { deltaY: -100 });
     containerRef.current?.dispatchEvent(event);
   }, [containerRef]);
@@ -24,7 +23,7 @@ function DiagramPanel({ ast, parseError }) {
   }, [containerRef]);
 
   return (
-    <div className="flex-1 p-4 min-h-0 flex flex-col">
+    <div className="flex-1 p-3 md:p-4 min-h-0 flex flex-col">
       <div className="flex items-center justify-between mb-2">
         <p className="text-xs text-gray-500 uppercase tracking-wider">
           Railroad Diagram
@@ -46,17 +45,20 @@ function DiagramPanel({ ast, parseError }) {
         {...(layout ? handlers : {})}
       >
         {!ast && !parseError && (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-sm text-gray-600">
-              정규식을 입력하면 구조가 시각화됩니다.
+          <div className="flex flex-col items-center justify-center h-full text-gray-600">
+            <span className="text-4xl mb-3">🛤️</span>
+            <p className="text-sm">정규식을 입력하면 구조가 시각화됩니다.</p>
+            <p className="text-xs text-gray-700 mt-1">
+              Railroad Diagram으로 흐름을 한눈에 파악하세요
             </p>
           </div>
         )}
 
         {parseError && (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-sm text-red-400 font-mono px-4">
-              ⚠ {parseError}
+          <div className="flex flex-col items-center justify-center h-full">
+            <span className="text-2xl mb-2">⚠️</span>
+            <p className="text-sm text-red-400 font-mono px-4 text-center">
+              {parseError}
             </p>
           </div>
         )}

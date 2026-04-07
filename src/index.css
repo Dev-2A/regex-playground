@@ -1,1 +1,65 @@
 @import "tailwindcss";
+
+/* 커스텀 스크롤바 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* 스크롤바 숨기기 유틸리티 */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* 선택 영역 */
+::selection {
+  background: rgba(59, 130, 246, 0.3);
+  color: #e5e7eb;
+}
+
+/* 포커스 링 글로벌 */
+*:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* 부드러운 스크롤 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 모노스페이스 폰트 통일 */
+code,
+pre,
+.font-mono {
+  font-family:
+    "JetBrains Mono", "Fira Code", "Cascadia Code", "Consolas", monospace;
+}
+
+/* 반응형 패널 전환 애니메이션 */
+@media (max-width: 768px) {
+  .panel-transition {
+    transition:
+      max-height 0.3s ease,
+      opacity 0.2s ease;
+  }
+}
