@@ -37,7 +37,7 @@ function App() {
               onTestStringChange={setTestString}
               regex={regex}
             />
-            <MatchPanel />
+            <MatchPanel regex={regex} testString={testString} />
           </>
         }
         right={
