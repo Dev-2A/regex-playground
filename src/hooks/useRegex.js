@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { parseRegex } from "../utils/regexParser";
 
 const DEFAULT_FLAGS = {
   g: true,
@@ -42,6 +43,11 @@ export function useRegex() {
     }
   }, [pattern, flagString]);
 
+  const { ast, error: parseError } = useMemo(
+    () => parseRegex(pattern),
+    [pattern],
+  );
+
   return {
     pattern,
     setPattern,
@@ -52,5 +58,7 @@ export function useRegex() {
     setTestString,
     regex,
     error,
+    ast,
+    parseError,
   };
 }
