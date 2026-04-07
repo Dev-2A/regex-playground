@@ -32,7 +32,11 @@ function App() {
               onToggleFlag={toggleFlag}
               error={error}
             />
-            <TestStringInput />
+            <TestStringInput
+              testString={testString}
+              onTestStringChange={setTestString}
+              regex={regex}
+            />
             <MatchPanel />
           </>
         }
