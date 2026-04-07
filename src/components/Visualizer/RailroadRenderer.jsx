@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NodeType } from "../../utils/regexParser";
 import { CONF } from "../../utils/diagramLayout";
 
@@ -119,6 +120,8 @@ function RenderNode({ node, x, y }) {
 
 // 터미널 노드 (리터럴, 이스케이프, ., 앵커)
 function TerminalNode({ node, x, y, centerY }) {
+  const [hovered, setHovered] = useState(false);
+
   let bgColor = COLORS.node;
   let borderColor = COLORS.nodeBorder;
   let rounded = 6;
@@ -140,58 +143,103 @@ function TerminalNode({ node, x, y, centerY }) {
   const display = node.display || node.value || "?";
 
   return (
-    <g transform={`translate(${x}, ${y + centerY - CONF.NODE_HEIGHT / 2})`}>
+    <g
+      transform={`translate(${x}, ${y + centerY - CONF.NODE_HEIGHT / 2})`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ cursor: "default" }}
+    >
       <rect
         width={node.width}
         height={CONF.NODE_HEIGHT}
         rx={rounded}
         ry={rounded}
-        fill={bgColor}
+        fill={hovered ? borderColor + "40" : bgColor}
         stroke={borderColor}
-        strokeWidth={1.5}
+        strokeWidth={hovered ? 2.5 : 1.5}
+        className="transition-all duration-150"
       />
       <text
         x={node.width / 2}
         y={CONF.NODE_HEIGHT / 2}
         textAnchor="middle"
         dominantBaseline="central"
-        fill={COLORS.nodeText}
+        fill={hovered ? "#ffffff" : COLORS.nodeText}
         fontSize={13}
         fontFamily="monospace"
+        className="transition-all duration-150"
       >
         {display}
       </text>
 
-      {/* 이스케이프 설명 툴팁 */}
+      {/* 호버 시 설명 표시 */}
       {node.description && <title>{node.description}</title>}
+
+      {/* 호버 시 하단 툴팁 */}
+      {hovered && node.description && (
+        <g transform={`translate(${node.width / 2}, ${CONF.NODE_HEIGHT + 6})`}>
+          <rect
+            x={-node.description.length * 3.5 - 8}
+            y={0}
+            width={node.description.length * 7 + 16}
+            height={20}
+            rx={4}
+            fill="#1f2937"
+            stroke={borderColor}
+            strokeWidth={1}
+          />
+          <text
+            x={0}
+            y={13}
+            textAnchor="middle"
+            fill="#d1d5db"
+            fontSize={11}
+            fontFamily="sans-serif"
+          >
+            {node.description}
+          </text>
+        </g>
+      )}
     </g>
   );
 }
 
 // 문자 클래스 노드
 function CharClassNode({ node, x, y, centerY }) {
+  const [hovered, setHovered] = useState(false);
+
+  const desc = node.negated ? "부정 문자 클래스" : "문자 클래스";
+
   return (
-    <g transform={`translate(${x}, ${y + centerY - CONF.NODE_HEIGHT / 2})`}>
+    <g
+      transform={`translate(${x}, ${y + centerY - CONF.NODE_HEIGHT / 2})`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{ cursor: "default" }}
+    >
       <rect
         width={node.width}
         height={CONF.NODE_HEIGHT}
         rx={6}
         ry={6}
-        fill="#4a2400"
+        fill={hovered ? COLORS.charClass + "40" : "#4a2400"}
         stroke={COLORS.charClass}
-        strokeWidth={1.5}
+        strokeWidth={hovered ? 2.5 : 1.5}
+        className="transition-all duration-150"
       />
       <text
         x={node.width / 2}
         y={CONF.NODE_HEIGHT / 2}
         textAnchor="middle"
         dominantBaseline="central"
-        fill={COLORS.nodeText}
+        fill={hovered ? "#ffffff" : COLORS.nodeText}
         fontSize={13}
         fontFamily="monospace"
+        className="transition-all duration-150"
       >
         {node.display}
       </text>
+      <title>{desc}</title>
     </g>
   );
 }
