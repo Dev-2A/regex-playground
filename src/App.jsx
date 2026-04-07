@@ -17,6 +17,8 @@ function App() {
     setTestString,
     regex,
     error,
+    ast,
+    parseError,
   } = useRegex();
 
   return (
@@ -42,7 +44,7 @@ function App() {
         }
         right={
           <>
-            <DiagramPanel />
+            <DiagramPanel ast={ast} parseError={parseError} />
             <CheatSheetPanel />
           </>
         }
